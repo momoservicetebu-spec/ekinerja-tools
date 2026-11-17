@@ -6,20 +6,23 @@
     <title>Input eKinerja Harian ASN</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; padding: 20px; }
-        .container { max-width: 600px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .container { max-width: 650px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         h2 { text-align: center; color: #2c3e50; margin-bottom: 20px; font-size: 22px; }
         .form-group { margin-bottom: 15px; }
         label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 14px; }
-        input[type="text"], input[type="date"], input[type="time"], select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-family: inherit; }
+        input[type="text"], input[type="date"], input[type="time"], select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
         .row { display: flex; gap: 15px; }
         .col { flex: 1; }
-        button { width: 100%; background-color: #3498db; color: white; padding: 12px; border: none; border-radius: 4px; font-size: 16px; font-weight: bold; cursor: pointer; transition: background 0.3s; margin-top: 10px; }
+        .info-box { background: #e8f4f8; padding: 10px; border-left: 4px solid #3498db; border-radius: 4px; font-size: 13px; margin-top: 5px; }
+        .checkbox-group { display: flex; align-items: center; gap: 10px; background: #fff3e0; padding: 12px; border-radius: 4px; border: 1px solid #ffcc80; margin-bottom: 15px; }
+        .checkbox-group input { width: auto; transform: scale(1.3); }
+        button { width: 100%; background-color: #3498db; color: white; padding: 12px; border: none; border-radius: 4px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
         button:hover { background-color: #2980b9; }
-        button:disabled { background-color: #95a5a6; cursor: not-allowed; }
+        .btn-secondary { background-color: #27ae60; margin-top: 15px; }
+        .btn-secondary:hover { background-color: #2ecc71; }
         #result-box { display: none; margin-top: 20px; padding: 15px; background: #e8f8f5; border-left: 5px solid #1abc9c; border-radius: 4px; }
-        #result-box a { color: #16a085; font-weight: bold; word-break: break-all; cursor: pointer; }
-        .loader { display: none; text-align: center; margin-top: 10px; font-style: italic; color: #7f8c8d; }
-        .preset-box { background: #eef2f5; padding: 15px; border-radius: 6px; margin-bottom: 20px; border: 1px dashed #bdc3c7; }
+        #result-box a { color: #16a085; font-weight: bold; cursor: pointer; }
+        .loader { display: none; text-align: center; margin-top: 10px; font-style: italic; }
     </style>
 </head>
 <body>
@@ -27,26 +30,26 @@
 <div class="container">
     <h2>Log Kinerja: Penata Layanan Operasional</h2>
     
-    <div class="preset-box">
+    <div class="form-group">
         <label for="templateTugas">⚡ Isi Otomatis Berdasarkan Tugas:</label>
         <select id="templateTugas" onchange="terapkanTemplate()">
             <option value="">-- Pilih Rutinitas Hari Ini --</option>
             <optgroup label="1. IT & Pengembang Aplikasi">
-                <option value="dev_fitur">Mendevelop Modul/Fitur Baru Aplikasi Otomasi (Trajectory)</option>
-                <option value="dev_bug">Maintenance & Bug Fixing Aplikasi Sekolah (Non-Trajectory)</option>
-                <option value="it_teknisi">Setup/Sinkronisasi Server AN/OSN/ABM (Trajectory)</option>
-                <option value="it_sapras">Maintenance Hardware & Sapras Sekolah (Non-Trajectory)</option>
+                <option value="dev_fitur">Mendevelop Modul/Fitur Baru Aplikasi (Trajectory)</option>
+                <option value="dev_bug">Maintenance & Bug Fixing (Non-Trajectory)</option>
+                <option value="it_teknisi">Setup/Sinkronisasi Server AN/OSN (Trajectory)</option>
+                <option value="it_sapras">Maintenance Hardware & Sapras (Non-Trajectory)</option>
             </optgroup>
             <optgroup label="2. Pustakawan">
-                <option value="pus_kasir">Layanan Administrasi Kasir & Sirkulasi (Non-Trajectory)</option>
-                <option value="pus_bersih">Pemeliharaan Kebersihan & Penataan Rak Buku (Non-Trajectory)</option>
-                <option value="pus_stok">Pelaksanaan Stok Opname Buku (Trajectory)</option>
-                <option value="pus_literasi">Menjalankan Program Literasi & Numerasi (Trajectory)</option>
+                <option value="pus_kasir">Layanan Administrasi Kasir (Non-Trajectory)</option>
+                <option value="pus_bersih">Penataan Rak Buku (Non-Trajectory)</option>
+                <option value="pus_stok">Pelaksanaan Stok Opname (Trajectory)</option>
+                <option value="pus_literasi">Program Literasi & Numerasi (Trajectory)</option>
             </optgroup>
             <optgroup label="3. Revitalisasi Sekolah">
-                <option value="rev_koordinasi">Koordinasi Tim Revitalisasi Sekolah (Non-Trajectory)</option>
+                <option value="rev_koordinasi">Koordinasi Tim Revitalisasi (Non-Trajectory)</option>
             </optgroup>
-            <option value="custom">-- Ketik Manual (Kosongkan Form) --</option>
+            <option value="custom">-- Ketik Manual --</option>
         </select>
     </div>
 
@@ -55,11 +58,12 @@
             <div class="col"><label for="tanggal">Tanggal</label><input type="date" id="tanggal" required></div>
         </div>
         <div class="form-group row">
-            <div class="col"><label for="jamMulai">Mulai</label><input type="time" id="jamMulai" required></div>
-            <div class="col"><label for="jamSelesai">Selesai</label><input type="time" id="jamSelesai" required></div>
+            <div class="col"><label for="jamMulai">Mulai</label><input type="time" id="jamMulai" onchange="hitungDurasi()" required></div>
+            <div class="col"><label for="jamSelesai">Selesai</label><input type="time" id="jamSelesai" onchange="hitungDurasi()" required></div>
         </div>
+        <div class="info-box" id="durasiInfo">Durasi: 0 Jam 0 Menit (Minimal akumulasi harian eKinerja adalah 7 Jam 30 Menit).</div>
 
-        <div class="form-group">
+        <div class="form-group" style="margin-top:15px;">
             <label for="jenisTarget">Jenis Target Rencana Aksi</label>
             <select id="jenisTarget" required>
                 <option value="Trajectory">Trajectory (Kuantitatif - Sudah Jelas di Awal)</option>
@@ -67,50 +71,47 @@
             </select>
         </div>
 
-        <div class="form-group">
-            <label for="rencanaAksi">Rencana Aksi</label>
-            <input type="text" id="rencanaAksi" placeholder="Contoh: Mengembangkan layanan otomasi..." required>
+        <!-- Checkbox Khusus sesuai PDF BKN -->
+        <div class="checkbox-group">
+            <input type="checkbox" id="isSelesai">
+            <label for="isSelesai" style="margin:0;"><strong>Checklist "Selesai pada Rencana Aksi"</strong><br><small style="font-weight:normal;">Centang jika kegiatan ini menyelesaikan target secara kuantitas (Bukan sekadar proses).</small></label>
         </div>
 
-        <div class="form-group">
-            <label for="kegiatan">Rencana Kegiatan Harian</label>
-            <input type="text" id="kegiatan" placeholder="Contoh: Menulis kode untuk modul presensi..." required>
-        </div>
-
-        <div class="form-group">
-            <label for="realisasi">Realisasi</label>
-            <input type="text" id="realisasi" placeholder="Contoh: 1 Kegiatan / 1 Modul" required>
-        </div>
+        <div class="form-group"><label>Rencana Aksi</label><input type="text" id="rencanaAksi" required></div>
+        <div class="form-group"><label>Kegiatan Harian</label><input type="text" id="kegiatan" required></div>
+        <div class="form-group"><label>Realisasi</label><input type="text" id="realisasi" required></div>
 
         <button type="submit" id="btnSubmit">Buat Bukti Dukung & Simpan</button>
         <div class="loader" id="loader">Memproses dokumen di Google Drive...</div>
     </form>
 
     <div id="result-box">
-        <strong>Berhasil!</strong><br>
-        Tautan Bukti Dukung: <br>
+        <strong>Berhasil!</strong><br>Tautan Bukti Dukung:<br>
         <a id="docLink">Klik di sini untuk menyalin & membuka</a>
     </div>
+
+    <hr style="margin-top: 30px; border: 0; border-top: 1px solid #ddd;">
+    <button class="btn-secondary" onclick="window.open('https://docs.google.com/spreadsheets/d/1NeOUa73_FxG-WlpxISLJRrXuTNuY2ISigzTy-Ive8WA', '_blank')">
+        📊 Buka Dashboard Monitoring (Google Sheets)
+    </button>
 </div>
 
 <script>
-    // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT DI SINI
-    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxorz25RFm-lhYN3ialtv4Nu3ptPVI33PBsxeCYWe-0u5bWdwKFQ_1kg8EWsFxB2WeU/exec";
+    // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT ANDA
+    const GAS_WEB_APP_URL = "URL_WEB_APP_GAS_ANDA_DISINI";
 
     document.getElementById('tanggal').valueAsDate = new Date();
 
-    // Data Preset Template
     const databaseTemplate = {
-        "dev_fitur": { target: "Trajectory", aksi: "Pengembangan Aplikasi Otomasi Manajemen Sekolah", kegiatan: "Merancang dan mendevelop modul/fitur baru pada aplikasi manajemen Perpustakaab TU/Guru", realisasi: "1 Modul/Fitur" },
-        "dev_bug": { target: "Non-Trajectory", aksi: "Pemeliharaan Aplikasi Otomasi Sekolah", kegiatan: "Melakukan monitoring server, bug fixing, dan optimalisasi sistem aplikasi sekolah", realisasi: "1 Kegiatan" },
-        "it_teknisi": { target: "Trajectory", aksi: "Dukungan Teknis Asesmen Nasional (AN/OSN/ABM/D-Smart)", kegiatan: "Melakukan setup, instalasi, dan sinkronisasi server/klien untuk pelaksanaan ujian", realisasi: "1 Kegiatan" },
-        "it_sapras": { target: "Non-Trajectory", aksi: "Pemeliharaan Sarana Prasarana IT Sekolah", kegiatan: "Mengecek dan melakukan maintenance hardware jaringan serta perangkat sapras", realisasi: "1 Kegiatan" },
-        "pus_kasir": { target: "Non-Trajectory", aksi: "Pelayanan Administrasi Perpustakaan", kegiatan: "Stanby melayani sirkulasi peminjaman/pengembalian buku dan administrasi kasir", realisasi: "1 Kegiatan" },
-        "pus_bersih": { target: "Non-Trajectory", aksi: "Pengelolaan Tata Ruang Perpustakaan", kegiatan: "Melakukan kebersihan ruang baca dan penataan rak buku", realisasi: "1 Kegiatan" },
-        "pus_stok": { target: "Trajectory", aksi: "Inventarisasi Koleksi Perpustakaan", kegiatan: "Melakukan stok opname dan pencatatan buku perpustakaan", realisasi: "1 Dokumen Laporan" },
-        "pus_literasi": { target: "Trajectory", aksi: "Pelaksanaan Program Literasi & Numerasi", kegiatan: "Menjalankan program literasi dan numerasi untuk menumbuhkan minat baca siswa", realisasi: "1 Kegiatan" },
-        "rev_koordinasi": { target: "Non-Trajectory", aksi: "Pelaksanaan Program Revitalisasi Sekolah", kegiatan: "Berkoordinasi dalam tim untuk program pemeliharaan dan revitalisasi sekolah", realisasi: "1 Kegiatan" },
-        "custom": { target: "Trajectory", aksi: "", kegiatan: "", realisasi: "" }
+        "dev_fitur": { target: "Trajectory", aksi: "Pengembangan Aplikasi Otomasi Manajemen Sekolah", kegiatan: "Merancang dan mendevelop modul/fitur baru pada aplikasi manajemen TU/Guru", realisasi: "1 Modul/Fitur", selesai: true },
+        "dev_bug": { target: "Non-Trajectory", aksi: "Pemeliharaan Aplikasi Otomasi Sekolah", kegiatan: "Melakukan monitoring server, bug fixing, dan optimalisasi sistem aplikasi sekolah", realisasi: "1 Kegiatan", selesai: false },
+        "it_teknisi": { target: "Trajectory", aksi: "Dukungan Teknis Asesmen Nasional", kegiatan: "Melakukan setup, instalasi, dan sinkronisasi server/klien untuk pelaksanaan ujian", realisasi: "1 Kegiatan", selesai: true },
+        "it_sapras": { target: "Non-Trajectory", aksi: "Pemeliharaan Sarana Prasarana IT", kegiatan: "Mengecek dan melakukan maintenance hardware jaringan serta perangkat sapras", realisasi: "1 Kegiatan", selesai: false },
+        "pus_kasir": { target: "Non-Trajectory", aksi: "Pelayanan Administrasi Perpustakaan", kegiatan: "Stanby melayani sirkulasi peminjaman/pengembalian buku dan administrasi kasir", realisasi: "1 Kegiatan", selesai: false },
+        "pus_bersih": { target: "Non-Trajectory", aksi: "Pengelolaan Tata Ruang Perpustakaan", kegiatan: "Melakukan kebersihan ruang baca dan penataan rak buku", realisasi: "1 Kegiatan", selesai: false },
+        "pus_stok": { target: "Trajectory", aksi: "Inventarisasi Koleksi Perpustakaan", kegiatan: "Melakukan stok opname dan pencatatan buku perpustakaan", realisasi: "1 Dokumen Laporan", selesai: true },
+        "pus_literasi": { target: "Trajectory", aksi: "Pelaksanaan Program Literasi", kegiatan: "Menjalankan program literasi dan numerasi untuk menumbuhkan minat baca siswa", realisasi: "1 Kegiatan", selesai: true },
+        "rev_koordinasi": { target: "Non-Trajectory", aksi: "Pelaksanaan Program Revitalisasi Sekolah", kegiatan: "Berkoordinasi dalam tim untuk program pemeliharaan dan revitalisasi", realisasi: "1 Kegiatan", selesai: false }
     };
 
     function terapkanTemplate() {
@@ -121,34 +122,49 @@
             document.getElementById('rencanaAksi').value = data.aksi;
             document.getElementById('kegiatan').value = data.kegiatan;
             document.getElementById('realisasi').value = data.realisasi;
+            document.getElementById('isSelesai').checked = data.selesai;
         }
+    }
+
+    function hitungDurasi() {
+        const mulai = document.getElementById('jamMulai').value;
+        const selesai = document.getElementById('jamSelesai').value;
+        if(mulai && selesai) {
+            let start = new Date("01/01/2000 " + mulai);
+            let end = new Date("01/01/2000 " + selesai);
+            if(end < start) {
+                document.getElementById('durasiInfo').innerText = "⚠️ Jam selesai harus lebih besar dari jam mulai.";
+                document.getElementById('durasiInfo').style.borderLeftColor = "#e74c3c";
+                return "";
+            }
+            let diff = (end - start) / 60000; 
+            let jam = Math.floor(diff / 60);
+            let menit = diff % 60;
+            document.getElementById('durasiInfo').innerText = `Durasi: ${jam} Jam ${menit} Menit (Rekap di BKN memonitor target 7 Jam 30 Menit/hari).`;
+            document.getElementById('durasiInfo').style.borderLeftColor = "#3498db";
+            return `${jam} Jam ${menit} Menit`;
+        }
+        return "";
     }
 
     document.getElementById('kinerjaForm').addEventListener('submit', function(e) {
         e.preventDefault(); 
-        
-        const jamMulai = document.getElementById('jamMulai').value;
-        const jamSelesai = document.getElementById('jamSelesai').value;
-        
-        if (jamSelesai <= jamMulai) {
-            alert("⚠️ Kesalahan input: 'Jam Selesai' harus lebih lambat dari 'Jam Mulai'.");
-            return; 
-        }
+        const durasiFinal = hitungDurasi();
+        if(!durasiFinal) return alert("Periksa kembali input waktu Anda.");
 
         const btnSubmit = document.getElementById('btnSubmit');
         const loader = document.getElementById('loader');
-        const resultBox = document.getElementById('result-box');
-        const docLink = document.getElementById('docLink');
-
+        
         btnSubmit.disabled = true;
         loader.style.display = 'block';
-        resultBox.style.display = 'none';
 
         const payload = {
             tanggal: document.getElementById('tanggal').value,
-            jamMulai: jamMulai,
-            jamSelesai: jamSelesai,
+            jamMulai: document.getElementById('jamMulai').value,
+            jamSelesai: document.getElementById('jamSelesai').value,
+            durasi: durasiFinal,
             jenisTarget: document.getElementById('jenisTarget').value,
+            isSelesai: document.getElementById('isSelesai').checked,
             rencanaAksi: document.getElementById('rencanaAksi').value,
             kegiatan: document.getElementById('kegiatan').value,
             realisasi: document.getElementById('realisasi').value
@@ -160,37 +176,27 @@
             body: JSON.stringify(payload),
             redirect: 'follow'
         })
-        .then(response => response.json())
+        .then(res => res.json())
         .then(data => {
             btnSubmit.disabled = false;
             loader.style.display = 'none';
-
             if(data.status === "success") {
-                resultBox.style.display = 'block';
-                docLink.innerText = data.dokumenUrl;
-                
-                docLink.onclick = function(event) {
-                    event.preventDefault();
-                    navigator.clipboard.writeText(data.dokumenUrl).then(() => {
-                        alert("✅ Tautan Bukti Dukung disalin! Silakan paste di eKinerja.");
-                    });
+                document.getElementById('result-box').style.display = 'block';
+                let link = document.getElementById('docLink');
+                link.innerText = data.dokumenUrl;
+                link.onclick = function(ev) {
+                    ev.preventDefault();
+                    navigator.clipboard.writeText(data.dokumenUrl).then(() => alert("✅ Tautan disalin!"));
                     window.open(data.dokumenUrl, '_blank');
                 };
-                
-                // Kembalikan form ke mode kosong setelah disubmit
-                document.getElementById('templateTugas').value = "custom";
-                terapkanTemplate();
-            } else {
-                alert("Gagal: " + data.pesan);
-            }
+            } else alert("Gagal: " + data.pesan);
         })
-        .catch(error => {
+        .catch(err => {
             btnSubmit.disabled = false;
             loader.style.display = 'none';
-            alert("Terjadi kesalahan. Pastikan URL Web App GAS sudah benar. Detail: " + error);
+            alert("Error: " + err);
         });
     });
 </script>
-
 </body>
 </html>
