@@ -82,40 +82,44 @@
 
 <script>
     // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT DI BAWAH INI
-    const GAS_WEB_APP_URL = "URL_WEB_APP_GAS_ANDA_DISINI";
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxorz25RFm-lhYN3ialtv4Nu3ptPVI33PBsxeCYWe-0u5bWdwKFQ_1kg8EWsFxB2WeU/exec";
 
     // Set tanggal default ke hari ini
     document.getElementById('tanggal').valueAsDate = new Date();
 
     document.getElementById('kinerjaForm').addEventListener('submit', function(e) {
-        e.preventDefault(); // Mencegah reload halaman
+        e.preventDefault(); 
         
-        // Ambil elemen UI
+        // 1. VALIDASI WAKTU
+        const jamMulai = document.getElementById('jamMulai').value;
+        const jamSelesai = document.getElementById('jamSelesai').value;
+        
+        if (jamSelesai <= jamMulai) {
+            alert("⚠️ Kesalahan input: 'Jam Selesai' harus lebih lambat dari 'Jam Mulai'.");
+            return; // Hentikan eksekusi jika waktu tidak valid
+        }
+
         const btnSubmit = document.getElementById('btnSubmit');
         const loader = document.getElementById('loader');
         const resultBox = document.getElementById('result-box');
         const docLink = document.getElementById('docLink');
 
-        // Ubah state UI ke loading
         btnSubmit.disabled = true;
         loader.style.display = 'block';
         resultBox.style.display = 'none';
 
-        // Siapkan data JSON
         const payload = {
             tanggal: document.getElementById('tanggal').value,
-            jamMulai: document.getElementById('jamMulai').value,
-            jamSelesai: document.getElementById('jamSelesai').value,
+            jamMulai: jamMulai,
+            jamSelesai: jamSelesai,
             jenisTarget: document.getElementById('jenisTarget').value,
             rencanaAksi: document.getElementById('rencanaAksi').value,
             kegiatan: document.getElementById('kegiatan').value,
             realisasi: document.getElementById('realisasi').value
         };
 
-        // Kirim request ke backend Google Apps Script
         fetch(GAS_WEB_APP_URL, {
             method: 'POST',
-            // Penggunaan text/plain menghindari preflight CORS issue pada GAS
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify(payload),
             redirect: 'follow'
@@ -126,12 +130,21 @@
             loader.style.display = 'none';
 
             if(data.status === "success") {
-                // Tampilkan hasil link dokumen
                 resultBox.style.display = 'block';
                 docLink.href = data.dokumenUrl;
                 docLink.innerText = data.dokumenUrl;
                 
-                // Opsional: Reset form kecuali Rencana Aksi (agar tidak perlu ketik ulang terus)
+                // Tambahkan fitur copy ke clipboard pada elemen link
+                docLink.onclick = function(event) {
+                    event.preventDefault();
+                    navigator.clipboard.writeText(data.dokumenUrl).then(() => {
+                        alert("✅ Tautan Bukti Dukung berhasil disalin! Silakan paste di eKinerja.");
+                    });
+                    // Buka tab baru setelah disalin
+                    window.open(data.dokumenUrl, '_blank');
+                };
+                
+                // Reset form kegiatan dan realisasi
                 document.getElementById('kegiatan').value = '';
                 document.getElementById('realisasi').value = '';
             } else {
@@ -141,7 +154,7 @@
         .catch(error => {
             btnSubmit.disabled = false;
             loader.style.display = 'none';
-            alert("Terjadi kesalahan jaringan atau server. Detail: " + error);
+            alert("Terjadi kesalahan jaringan. Detail: " + error);
         });
     });
 </script>
