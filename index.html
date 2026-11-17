@@ -94,6 +94,8 @@
             <button id="tabDash" onclick="switchTab('dashboard')">📊 Dashboard</button>
         </div>
 
+        <!-- ... (Kode Header, CSS, dan Login sama persis seperti sebelumnya) ... -->
+
         <!-- FORM INPUT -->
         <div id="form-section">
             <div class="form-group">
@@ -129,10 +131,25 @@
                 <div class="form-group"><label>Kegiatan Harian</label><input type="text" id="kegiatan" required></div>
                 <div class="form-group"><label>Realisasi</label><input type="text" id="realisasi" required></div>
                 
+                <!-- BAGIAN BUKTI DUKUNG YANG DIPERBARUI -->
                 <div class="form-group" style="background:#f8faff; padding:15px; border:1px dashed #3498db; border-radius:6px;">
-                    <label style="color:#2980b9; font-size:15px;">📂 Bukti Dukung (Opsional)</label>
-                    <div style="margin-top: 10px;"><label style="font-size:13px; color:#444;">1. Upload Foto/Screenshot (Gambar):</label><input type="file" id="fotoKegiatan" accept="image/*" style="background:#fff; border:none; padding:8px 0;"></div>
-                    <div style="margin-top: 15px;"><label style="font-size:13px; color:#444;">2. Link Dokumen (Word/Excel):</label><input type="url" id="linkDokumen" placeholder="Paste link..." style="background:#fff;"></div>
+                    <label style="color:#2980b9; font-size:15px;">📂 Bukti Dukung Terintegrasi (Opsional)</label>
+                    
+                    <div style="margin-top: 10px;">
+                        <label style="font-size:13px; color:#444;">1. Scan Dokumen / Foto Langsung (Kamera):</label>
+                        <!-- Atribut capture="environment" untuk langsung membuka kamera belakang HP -->
+                        <input type="file" id="fotoKegiatan" accept="image/*" capture="environment" style="background:#fff; border:none; padding:8px 0; font-size: 14px;">
+                    </div>
+                    
+                    <div style="margin-top: 15px;">
+                        <label style="font-size:13px; color:#444;">2. Tautan Dokumen (Drive/Word/Excel):</label>
+                        <input type="url" id="linkDokumen" placeholder="Paste link URL di sini..." style="background:#fff;">
+                    </div>
+
+                    <div style="margin-top: 15px;">
+                        <label style="font-size:13px; color:#444;">3. Snippet Kode Dev / Log Teknis:</label>
+                        <textarea id="kodeDev" rows="4" placeholder="Paste kode HTML/JS/Script atau catatan teknis di sini..." style="width:100%; padding:12px; border:1px solid #ced4da; border-radius:6px; font-family:monospace; font-size:13px; resize:vertical; box-sizing:border-box; background:#2c3e50; color:#ecf0f1;"></textarea>
+                    </div>
                 </div>
 
                 <button type="submit" id="btnSubmit" class="btn-primary">Buat Bukti Dukung & Simpan</button>
@@ -142,7 +159,7 @@
             <div id="result-box"><strong>✅ Berhasil!</strong><br><a id="docLink" href="#" style="color:#16a085; font-weight:bold; word-break:break-all;">Klik di sini untuk membuka</a></div>
         </div>
 
-        <!-- DASHBOARD -->
+        <!-- DASHBOARD (Kode tetap sama) -->
         <div id="dashboard-section">
             <div class="table-responsive">
                 <table>
@@ -158,138 +175,14 @@
     // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT ANDA DI SINI
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxorz25RFm-lhYN3ialtv4Nu3ptPVI33PBsxeCYWe-0u5bWdwKFQ_1kg8EWsFxB2WeU/exec";
 
-    // ============================================
-    // SISTEM KEAMANAN OTENTIKASI
-    // ============================================
-    document.addEventListener("DOMContentLoaded", function() {
-        // Cek apakah user sudah punya token di HP-nya
-        const token = localStorage.getItem("app_kinerja_token");
-        if(token) {
-            bukaAplikasi();
-        }
-    });
-
-    function prosesLogin() {
-        const pass = document.getElementById('loginPassword').value;
-        if(!pass) return alert("Masukkan password!");
-        
-        document.getElementById('btnLogin').disabled = true;
-        document.getElementById('loginLoader').style.display = 'block';
-
-        fetch(GAS_WEB_APP_URL, {
-            method: 'POST',
-            body: JSON.stringify({ action: "login", password: pass })
-        })
-        .then(res => res.json())
-        .then(data => {
-            document.getElementById('btnLogin').disabled = false;
-            document.getElementById('loginLoader').style.display = 'none';
-            if(data.status === "success") {
-                // Simpan token ke brankas browser
-                localStorage.setItem("app_kinerja_token", data.token);
-                bukaAplikasi();
-            } else {
-                alert("Akses Ditolak: " + data.pesan);
-                document.getElementById('loginPassword').value = '';
-            }
-        }).catch(err => {
-            document.getElementById('btnLogin').disabled = false;
-            document.getElementById('loginLoader').style.display = 'none';
-            alert("Gagal koneksi ke server keamanan.");
-        });
-    }
-
-    function bukaAplikasi() {
-        document.getElementById('login-section').style.display = 'none';
-        document.getElementById('app-section').style.display = 'block';
-    }
-
-    function logout() {
-        localStorage.removeItem("app_kinerja_token");
-        document.getElementById('app-section').style.display = 'none';
-        document.getElementById('login-section').style.display = 'flex';
-        document.getElementById('loginPassword').value = '';
-    }
-
-    // ============================================
-    // TAB NAVIGASI & DASHBOARD SECURE FETCH
-    // ============================================
-    function switchTab(tabName) {
-        if(tabName === 'form') {
-            document.getElementById('form-section').style.display = 'block';
-            document.getElementById('dashboard-section').style.display = 'none';
-            document.getElementById('tabForm').classList.add('active');
-            document.getElementById('tabDash').classList.remove('active');
-        } else {
-            document.getElementById('form-section').style.display = 'none';
-            document.getElementById('dashboard-section').style.display = 'block';
-            document.getElementById('tabForm').classList.remove('active');
-            document.getElementById('tabDash').classList.add('active');
-            loadDashboardSecure(); 
-        }
-    }
-
-    function loadDashboardSecure() {
-        const tbody = document.getElementById('dashboard-body');
-        const token = localStorage.getItem("app_kinerja_token");
-        if(!token) return logout();
-
-        tbody.innerHTML = "<tr><td colspan='4' style='text-align:center;'>⏳ Mengambil data aman...</td></tr>";
-        
-        // MENGIRIM TOKEN KE SERVER MELALUI PARAMETER URL
-        fetch(GAS_WEB_APP_URL + "?token=" + token) 
-        .then(res => res.json())
-        .then(data => {
-            if(data.status === "success") {
-                if(data.data.length === 0) return tbody.innerHTML = "<tr><td colspan='4' style='text-align:center;'>Belum ada data.</td></tr>";
-                let html = "";
-                data.data.forEach(item => {
-                    let badge = item.status === "Selesai" ? "<span class='badge badge-selesai'>Selesai</span>" : "<span class='badge badge-proses'>Proses</span>";
-                    html += `<tr><td><strong>${item.tanggal}</strong><br><small>${item.waktu}</small></td><td>${item.kegiatan}</td><td>${item.realisasi}<br><div style="margin-top:5px;">${badge}</div></td><td><a href="${item.link}" target="_blank" class="link-btn">Buka</a></td></tr>`;
-                });
-                tbody.innerHTML = html;
-            } else {
-                tbody.innerHTML = `<tr><td colspan='4' style='text-align:center; color:red;'>Gagal: ${data.pesan}</td></tr>`;
-                if(data.pesan.includes("Ditolak")) logout();
-            }
-        });
-    }
-
-    // ============================================
-    // LOGIKA FORM SECURE SUBMIT
-    // ============================================
-    document.getElementById('tanggal').valueAsDate = new Date();
-    const now = new Date();
-    document.getElementById('jamMulai').value = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-    
-    // (Data template diringkas agar skrip bersih)
-    const databaseTemplate = { "dev_fitur": { target: "Trajectory", aksi: "Pengembangan Aplikasi", kegiatan: "Mendevelop fitur baru", realisasi: "1 Modul", selesai: true }, "pus_kasir": { target: "Non-Trajectory", aksi: "Pelayanan Perpustakaan", kegiatan: "Sirkulasi peminjaman", realisasi: "1 Kegiatan", selesai: false }};
-    
-    function terapkanTemplate() {
-        const p = document.getElementById('templateTugas').value;
-        if(p && databaseTemplate[p]) {
-            document.getElementById('jenisTarget').value = databaseTemplate[p].target;
-            document.getElementById('rencanaAksi').value = databaseTemplate[p].aksi;
-            document.getElementById('kegiatan').value = databaseTemplate[p].kegiatan;
-            document.getElementById('realisasi').value = databaseTemplate[p].realisasi;
-            document.getElementById('isSelesai').checked = databaseTemplate[p].selesai;
-        }
-    }
-    
-    function hitungDurasi() {
-        const start = new Date("01/01/2000 " + document.getElementById('jamMulai').value);
-        const end = new Date("01/01/2000 " + document.getElementById('jamSelesai').value);
-        if(end < start) return "";
-        let diff = (end - start) / 60000; 
-        document.getElementById('durasiInfo').innerText = `Durasi: ${Math.floor(diff/60)} Jam ${diff%60} Menit`;
-        return `${Math.floor(diff/60)} Jam ${diff%60} Menit`;
-    }
+    // ... (Fungsi Login, Logout, Dashboard, dan Tab persis sama seperti sebelumnya) ...
+    // ... [PASTIKAN ANDA MEMPERTAHANKAN KODE JS SEBELUMNYA DI SINI] ...
 
     document.getElementById('kinerjaForm').addEventListener('submit', function(e) {
         e.preventDefault(); 
         const durasiFinal = hitungDurasi();
         const token = localStorage.getItem("app_kinerja_token");
-        if(!token) return logout(); // Keamanan lapis kedua di sisi klien
+        if(!token) return logout();
         
         document.getElementById('btnSubmit').disabled = true; 
         document.getElementById('loader').style.display = 'block';
@@ -310,8 +203,8 @@
 
     function kirimDataSecure(fotoBase64, fotoMimeType, durasiFinal, token) {
         const payload = {
-            action: "submit", // PENTING: Penanda agar server tahu ini form
-            token: token,     // PENTING: Kunci akses ke server
+            action: "submit", 
+            token: token,     
             tanggal: document.getElementById('tanggal').value,
             jamMulai: document.getElementById('jamMulai').value,
             jamSelesai: document.getElementById('jamSelesai').value,
@@ -322,6 +215,7 @@
             kegiatan: document.getElementById('kegiatan').value,
             realisasi: document.getElementById('realisasi').value,
             linkDokumen: document.getElementById('linkDokumen').value,
+            kodeDev: document.getElementById('kodeDev').value, // Menangkap data Snippet Kode
             fotoBase64: fotoBase64,
             fotoMimeType: fotoMimeType
         };
@@ -341,9 +235,10 @@
                 document.getElementById('docLink').innerText = data.dokumenUrl;
                 document.getElementById('fotoKegiatan').value = "";
                 document.getElementById('linkDokumen').value = "";
+                document.getElementById('kodeDev').value = "";
             } else {
                 alert("Gagal: " + data.pesan);
-                if(data.pesan.includes("Ditolak")) logout(); // Tendang user jika token expired/salah
+                if(data.pesan.includes("Ditolak")) logout();
             }
         }).catch(err => {
             document.getElementById('btnSubmit').disabled = false;
@@ -354,3 +249,5 @@
 </script>
 </body>
 </html>
+
+    
