@@ -5,71 +5,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Aplikasi e-Kinerja SMAN 1 BA</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f4f7f6; color: #333; margin: 0; padding: 10px; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh;}
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #f4f7f6; color: #333; margin: 0; padding: 10px; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; }
         
         /* KOTAK UTAMA */
-        .container { width: 100%; max-width: 650px; background: #fff; padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); box-sizing: border-box; margin-top: 20px;}
-        
+        .container { width: 100%; max-width: 650px; background: #fff; padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); box-sizing: border-box; margin-top: 20px; }
+        h2 { text-align: center; color: #2c3e50; margin-bottom: 20px; font-size: 20px; line-height: 1.4; }
+
         /* HALAMAN LOGIN */
         #login-section { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px 10px; }
         .lock-icon { font-size: 50px; margin-bottom: 10px; }
         #login-section h2 { margin-bottom: 5px; color:#2c3e50; }
         #login-section p { color:#7f8c8d; font-size: 14px; margin-bottom: 25px; text-align: center; }
-        .login-input { width: 100%; max-width: 300px; padding: 15px; border: 1px solid #ced4da; border-radius: 6px; font-size: 16px; text-align: center; letter-spacing: 2px; margin-bottom: 15px;}
-        
-        /* APLIKASI UTAMA (Disembunyikan di awal) */
+        .login-input { width: 100%; max-width: 300px; padding: 15px; border: 1px solid #ced4da; border-radius: 6px; font-size: 16px; text-align: center; letter-spacing: 2px; margin-bottom: 15px; }
+
+        /* APLIKASI UTAMA */
         #app-section { display: none; width: 100%; }
         
         /* HEADER APLIKASI */
         .header-app { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #ecf0f1; padding-bottom: 15px; }
         .header-app h2 { margin: 0; font-size: 18px; color: #2c3e50; }
-        .btn-logout { background: #e74c3c; color: white; border: none; padding: 8px 15px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 13px;}
+        .btn-logout { background: #e74c3c; color: white; border: none; padding: 8px 15px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 13px; }
         
         /* TAB NAVIGASI */
         .tab-nav { display: flex; margin-bottom: 20px; border-radius: 8px; overflow: hidden; border: 1px solid #3498db; }
-        .tab-nav button { flex: 1; padding: 12px; font-size: 15px; font-weight: bold; background-color: #fff; color: #3498db; border: none; cursor: pointer; }
+        .tab-nav button { flex: 1; padding: 12px; font-size: 15px; font-weight: bold; background-color: #fff; color: #3498db; border: none; cursor: pointer; transition: background 0.3s; margin:0; border-radius:0; }
         .tab-nav button.active { background-color: #3498db; color: #fff; }
-        
+        .tab-nav button:focus { outline: none; }
+
         /* FORM ELEMENTS */
         .form-group { margin-bottom: 16px; }
         label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 14px; color: #34495e; }
-        input[type="text"], input[type="date"], input[type="time"], input[type="file"], input[type="url"], input[type="password"], select { width: 100%; padding: 12px 15px; border: 1px solid #ced4da; border-radius: 6px; box-sizing: border-box; font-family: inherit; font-size: 16px; }
+        input[type="text"], input[type="date"], input[type="time"], input[type="file"], input[type="url"], input[type="password"], select { width: 100%; padding: 12px 15px; border: 1px solid #ced4da; border-radius: 6px; box-sizing: border-box; font-family: inherit; font-size: 16px; background-color: #fff; }
         
         .row { display: flex; gap: 15px; } .col { flex: 1; }
         .info-box { background: #e8f4f8; padding: 12px; border-left: 4px solid #3498db; border-radius: 4px; font-size: 13px; margin-top: 5px; }
-        .checkbox-group { display: flex; align-items: flex-start; gap: 12px; background: #fff3e0; padding: 15px; border-radius: 6px; border: 1px solid #ffcc80; margin-bottom: 15px; cursor: pointer; }
-        .checkbox-group input[type="checkbox"] { width: 22px; height: 22px; margin: 0; flex-shrink: 0; }
         
-        .btn-primary { width: 100%; background-color: #3498db; color: white; padding: 15px; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .btn-primary:hover { background-color: #2980b9; }
-        
+        .btn-primary { width: 100%; background: #3498db; color: white; padding: 14px; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .btn-primary:hover { background: #2980b9; }
+        .btn-primary:disabled { background: #95a5a6; cursor: not-allowed; }
+
+        .checkbox-group { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 15px; background: #fff3cd; padding: 12px; border-left: 4px solid #f39c12; border-radius: 4px; cursor: pointer; }
+        .checkbox-group input { width: 20px; height: 20px; margin-top: 2px; }
+
         #result-box { display: none; margin-top: 20px; padding: 15px; background: #e8f8f5; border-left: 5px solid #1abc9c; border-radius: 6px; font-size: 14px; word-break: break-word; }
         .loader { display: none; text-align: center; margin-top: 15px; font-size: 14px; font-style: italic; color: #7f8c8d; }
-        
+
         /* DASHBOARD */
         #dashboard-section { display: none; }
         .table-responsive { overflow-x: auto; margin-top: 10px; border-radius: 6px; border: 1px solid #ecf0f1; }
         table { width: 100%; border-collapse: collapse; min-width: 500px; font-size: 13px; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ecf0f1; }
-        th { background-color: #f8f9fa; font-weight: bold; }
-        .badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; color: white; display: inline-block;}
+        th { background-color: #f8f9fa; color: #2c3e50; font-weight: bold; }
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: bold; color: white; display: inline-block; }
         .badge-selesai { background-color: #27ae60; } .badge-proses { background-color: #f39c12; }
-        .link-btn { background: #ecf0f1; color: #2980b9; padding: 6px 12px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 12px;}
-        
+        .link-btn { background: #ecf0f1; color: #2980b9; padding: 6px 12px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 12px; }
+
         @media screen and (max-width: 480px) {
-            body { padding: 0; background: #fff; align-items: flex-start;}
-            .container { padding: 15px; margin-top: 0; border-radius: 0; box-shadow:none;}
+            body { padding: 0; background: #fff; align-items: flex-start; }
+            .container { padding: 15px; margin-top: 0; border-radius: 0; box-shadow: none; }
             .row { flex-direction: column; gap: 10px; }
+            .btn-primary { padding: 14px; font-size: 15px; }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    
-    <!-- ============================================== -->
     <!-- HALAMAN LOGIN -->
-    <!-- ============================================== -->
     <div id="login-section">
         <div class="lock-icon">🔒</div>
         <h2>Portal Keamanan</h2>
@@ -80,21 +82,18 @@
         <div class="loader" id="loginLoader">Memvalidasi kunci...</div>
     </div>
 
-    <!-- ============================================== -->
-    <!-- APLIKASI UTAMA (FORM & DASHBOARD) -->
-    <!-- ============================================== -->
+    <!-- APLIKASI UTAMA -->
     <div id="app-section">
         <div class="header-app">
             <h2>Log Kinerja ASN</h2>
             <button onclick="logout()" class="btn-logout">Logout 🔓</button>
         </div>
 
+        <!-- TAB NAVIGASI -->
         <div class="tab-nav">
             <button id="tabForm" class="active" onclick="switchTab('form')">📝 Form Input</button>
             <button id="tabDash" onclick="switchTab('dashboard')">📊 Dashboard</button>
         </div>
-
-        <!-- ... (Kode Header, CSS, dan Login sama persis seperti sebelumnya) ... -->
 
         <!-- FORM INPUT -->
         <div id="form-section">
@@ -102,15 +101,21 @@
                 <label>⚡ Isi Otomatis Berdasarkan Tugas:</label>
                 <select id="templateTugas" onchange="terapkanTemplate()">
                     <option value="">-- Pilih Rutinitas Hari Ini --</option>
-                    <option value="dev_fitur">Dev. Modul Aplikasi Baru (Trajectory)</option>
-                    <option value="dev_bug">Maintenance & Bug Fixing (Non-Trajectory)</option>
-                    <option value="it_teknisi">Setup Server AN/OSN (Trajectory)</option>
-                    <option value="it_sapras">Maintenance Hardware (Non-Trajectory)</option>
-                    <option value="pus_kasir">Layanan Kasir Perpus (Non-Trajectory)</option>
-                    <option value="pus_bersih">Penataan Rak Buku (Non-Trajectory)</option>
-                    <option value="pus_stok">Stok Opname Buku (Trajectory)</option>
-                    <option value="pus_literasi">Program Literasi/Numerasi (Trajectory)</option>
-                    <option value="rev_koordinasi">Koordinasi Tim Revitalisasi (Non-Trajectory)</option>
+                    <optgroup label="1. IT & Pengembang Aplikasi">
+                        <option value="dev_fitur">Dev. Modul Aplikasi Baru (Trajectory)</option>
+                        <option value="dev_bug">Maintenance & Bug Fixing (Non-Trajectory)</option>
+                        <option value="it_teknisi">Setup Server AN/OSN (Trajectory)</option>
+                        <option value="it_sapras">Maintenance Hardware (Non-Trajectory)</option>
+                    </optgroup>
+                    <optgroup label="2. Pustakawan">
+                        <option value="pus_kasir">Layanan Kasir Perpus (Non-Trajectory)</option>
+                        <option value="pus_bersih">Penataan Rak Buku (Non-Trajectory)</option>
+                        <option value="pus_stok">Stok Opname Buku (Trajectory)</option>
+                        <option value="pus_literasi">Program Literasi/Numerasi (Trajectory)</option>
+                    </optgroup>
+                    <optgroup label="3. Revitalisasi Sekolah">
+                        <option value="rev_koordinasi">Koordinasi Tim Revitalisasi (Non-Trajectory)</option>
+                    </optgroup>
                     <option value="custom">-- Ketik Manual --</option>
                 </select>
             </div>
@@ -119,36 +124,43 @@
                 <div class="form-group row">
                     <div class="col"><label>Tanggal</label><input type="date" id="tanggal" required></div>
                 </div>
+                
                 <div class="form-group row">
                     <div class="col"><label>Jam Mulai</label><input type="time" id="jamMulai" onchange="hitungDurasi()" required></div>
                     <div class="col"><label>Jam Selesai</label><input type="time" id="jamSelesai" onchange="hitungDurasi()" required></div>
                 </div>
+                
                 <div class="info-box" id="durasiInfo">Durasi: 0 Jam 0 Menit</div>
 
-                <div class="form-group" style="margin-top:15px;"><label>Jenis Target</label><select id="jenisTarget" required><option value="Trajectory">Trajectory (Kuantitatif)</option><option value="Non-Trajectory">Non-Trajectory (Berkaitan)</option></select></div>
-                <div class="checkbox-group" onclick="document.getElementById('isSelesai').click()"><input type="checkbox" id="isSelesai" onclick="event.stopPropagation()"><label for="isSelesai"><strong>Checklist "Selesai pada Rencana Aksi"</strong></label></div>
+                <div class="form-group" style="margin-top:15px;">
+                    <label>Jenis Target</label>
+                    <select id="jenisTarget" required>
+                        <option value="Trajectory">Trajectory (Kuantitatif - Sudah Jelas di Awal)</option>
+                        <option value="Non-Trajectory">Non-Trajectory (Naratif - Berkaitan)</option>
+                    </select>
+                </div>
+                
+                <div class="checkbox-group" onclick="document.getElementById('isSelesai').click()">
+                    <input type="checkbox" id="isSelesai" onclick="event.stopPropagation()">
+                    <label for="isSelesai">
+                        <strong>Checklist "Selesai pada Rencana Aksi"</strong><br>
+                        <span style="font-weight:normal; font-size:12px; color:#555;">Centang jika kegiatan selesai secara kuantitas.</span>
+                    </label>
+                </div>
+
                 <div class="form-group"><label>Rencana Aksi</label><input type="text" id="rencanaAksi" required></div>
                 <div class="form-group"><label>Kegiatan Harian</label><input type="text" id="kegiatan" required></div>
                 <div class="form-group"><label>Realisasi</label><input type="text" id="realisasi" required></div>
                 
-                <!-- BAGIAN BUKTI DUKUNG YANG DIPERBARUI -->
                 <div class="form-group" style="background:#f8faff; padding:15px; border:1px dashed #3498db; border-radius:6px;">
-                    <label style="color:#2980b9; font-size:15px;">📂 Bukti Dukung Terintegrasi (Opsional)</label>
-                    
+                    <label style="color:#2980b9; font-size:15px;">📂 Bukti Dukung (Opsional)</label>
                     <div style="margin-top: 10px;">
-                        <label style="font-size:13px; color:#444;">1. Scan Dokumen / Foto Langsung (Kamera):</label>
-                        <!-- Atribut capture="environment" untuk langsung membuka kamera belakang HP -->
-                        <input type="file" id="fotoKegiatan" accept="image/*" capture="environment" style="background:#fff; border:none; padding:8px 0; font-size: 14px;">
+                        <label style="font-size:13px; color:#444;">1. Upload Foto/Screenshot (Gambar):</label>
+                        <input type="file" id="fotoKegiatan" accept="image/*" style="background:#fff; border:none; padding:8px 0;">
                     </div>
-                    
                     <div style="margin-top: 15px;">
-                        <label style="font-size:13px; color:#444;">2. Tautan Dokumen (Drive/Word/Excel):</label>
-                        <input type="url" id="linkDokumen" placeholder="Paste link URL di sini..." style="background:#fff;">
-                    </div>
-
-                    <div style="margin-top: 15px;">
-                        <label style="font-size:13px; color:#444;">3. Snippet Kode Dev / Log Teknis:</label>
-                        <textarea id="kodeDev" rows="4" placeholder="Paste kode HTML/JS/Script atau catatan teknis di sini..." style="width:100%; padding:12px; border:1px solid #ced4da; border-radius:6px; font-family:monospace; font-size:13px; resize:vertical; box-sizing:border-box; background:#2c3e50; color:#ecf0f1;"></textarea>
+                        <label style="font-size:13px; color:#444;">2. Link Dokumen (Word/Excel/Drive):</label>
+                        <input type="url" id="linkDokumen" placeholder="Paste link tautan dokumen..." style="background:#fff;">
                     </div>
                 </div>
 
@@ -156,15 +168,28 @@
                 <div class="loader" id="loader">Aman terkoneksi. Mengirim data rahasia...</div>
             </form>
 
-            <div id="result-box"><strong>✅ Berhasil!</strong><br><a id="docLink" href="#" style="color:#16a085; font-weight:bold; word-break:break-all;">Klik di sini untuk membuka</a></div>
+            <div id="result-box">
+                <strong>✅ Berhasil!</strong><br>Tautan Bukti Dukung Anda:<br><br>
+                <a id="docLink" href="#" style="color:#16a085; font-weight:bold; word-break:break-all;">Klik di sini untuk membuka</a>
+            </div>
         </div>
 
-        <!-- DASHBOARD (Kode tetap sama) -->
+        <!-- DASHBOARD -->
         <div id="dashboard-section">
+            <p style="font-size: 14px; color: #7f8c8d; margin-bottom: 10px;">Rekapitulasi riwayat kinerja yang telah berhasil disubmit.</p>
             <div class="table-responsive">
                 <table>
-                    <thead><tr><th style="min-width: 90px;">Tgl/Waktu</th><th style="min-width: 150px;">Kegiatan</th><th>Output</th><th>Laporan</th></tr></thead>
-                    <tbody id="dashboard-body"><tr><td colspan="4" style="text-align:center; padding: 20px;">Memuat data terenkripsi...</td></tr></tbody>
+                    <thead>
+                        <tr>
+                            <th style="min-width: 90px;">Tgl/Waktu</th>
+                            <th style="min-width: 150px;">Kegiatan</th>
+                            <th>Output</th>
+                            <th>Laporan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dashboard-body">
+                        <tr><td colspan="4" style="text-align:center; padding: 20px;">Memuat data terenkripsi...</td></tr>
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -172,30 +197,178 @@
 </div>
 
 <script>
-    // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT ANDA DI SINI
+    // URL WEB APP GOOGLE APPS SCRIPT
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxorz25RFm-lhYN3ialtv4Nu3ptPVI33PBsxeCYWe-0u5bWdwKFQ_1kg8EWsFxB2WeU/exec";
 
-    // ... (Fungsi Login, Logout, Dashboard, dan Tab persis sama seperti sebelumnya) ...
-    // ... [PASTIKAN ANDA MEMPERTAHANKAN KODE JS SEBELUMNYA DI SINI] ...
+    // SISTEM KEAMANAN OTENTIKASI
+    document.addEventListener("DOMContentLoaded", function() {
+        const token = localStorage.getItem("app_kinerja_token");
+        if(token) {
+            bukaAplikasi();
+        }
+    });
+
+    function prosesLogin() {
+        const pass = document.getElementById('loginPassword').value;
+        if(!pass) return alert("Masukkan password!");
+        
+        document.getElementById('btnLogin').disabled = true;
+        document.getElementById('loginLoader').style.display = 'block';
+
+        fetch(GAS_WEB_APP_URL, {
+            method: 'POST',
+            body: JSON.stringify({ action: "login", password: pass })
+        })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('btnLogin').disabled = false;
+            document.getElementById('loginLoader').style.display = 'none';
+            if(data.status === "success") {
+                localStorage.setItem("app_kinerja_token", data.token);
+                bukaAplikasi();
+            } else {
+                alert("Akses Ditolak: " + data.pesan);
+                document.getElementById('loginPassword').value = '';
+            }
+        }).catch(err => {
+            document.getElementById('btnLogin').disabled = false;
+            document.getElementById('loginLoader').style.display = 'none';
+            alert("Gagal koneksi ke server keamanan.");
+        });
+    }
+
+    function bukaAplikasi() {
+        document.getElementById('login-section').style.display = 'none';
+        document.getElementById('app-section').style.display = 'block';
+    }
+
+    function logout() {
+        localStorage.removeItem("app_kinerja_token");
+        document.getElementById('app-section').style.display = 'none';
+        document.getElementById('login-section').style.display = 'flex';
+        document.getElementById('loginPassword').value = '';
+    }
+
+    // TAB NAVIGASI & DASHBOARD SECURE FETCH
+    function switchTab(tabName) {
+        if(tabName === 'form') {
+            document.getElementById('form-section').style.display = 'block';
+            document.getElementById('dashboard-section').style.display = 'none';
+            document.getElementById('tabForm').classList.add('active');
+            document.getElementById('tabDash').classList.remove('active');
+        } else {
+            document.getElementById('form-section').style.display = 'none';
+            document.getElementById('dashboard-section').style.display = 'block';
+            document.getElementById('tabForm').classList.remove('active');
+            document.getElementById('tabDash').classList.add('active');
+            loadDashboardSecure(); 
+        }
+    }
+
+    // FUNGSI MENGAMBIL DATA UNTUK DASHBOARD SECURE
+    function loadDashboardSecure() {
+        const tbody = document.getElementById('dashboard-body');
+        const token = localStorage.getItem("app_kinerja_token");
+        if(!token) return logout();
+
+        tbody.innerHTML = "<tr><td colspan='4' style='text-align:center; padding:20px;'>⏳ Mengambil data aman...</td></tr>";
+
+        fetch(GAS_WEB_APP_URL + "?token=" + token) 
+        .then(res => res.json())
+        .then(data => {
+            if(data.status === "success") {
+                if(data.data.length === 0) return tbody.innerHTML = "<tr><td colspan='4' style='text-align:center;'>Belum ada data kinerja.</td></tr>";
+                
+                let html = "";
+                data.data.forEach(item => {
+                    let badge = item.status === "Selesai" ? "<span class='badge badge-selesai'>Selesai</span>" : "<span class='badge badge-proses'>Proses</span>";
+                    html += `<tr>
+                                <td><strong>${item.tanggal}</strong><br><small style="color:#7f8c8d">${item.waktu}</small></td>
+                                <td>${item.kegiatan}</td>
+                                <td>${item.realisasi}<br><div style="margin-top:5px;">${badge}</div></td>
+                                <td><a href="${item.link}" target="_blank" class="link-btn">Buka</a></td>
+                             </tr>`;
+                });
+                tbody.innerHTML = html;
+            } else {
+                tbody.innerHTML = `<tr><td colspan='4' style='text-align:center; color:red;'>Gagal: ${data.pesan}</td></tr>`;
+                if(data.pesan.includes("Ditolak")) logout();
+            }
+        })
+        .catch(err => {
+            tbody.innerHTML = `<tr><td colspan='4' style='text-align:center; color:red;'>Terjadi kesalahan jaringan saat mengambil data.</td></tr>`;
+        });
+    }
+
+    // LOGIKA FORM INPUT SECURE SUBMIT
+    document.getElementById('tanggal').valueAsDate = new Date();
+    const now = new Date();
+    document.getElementById('jamMulai').value = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+    const databaseTemplate = {
+        "dev_fitur": { target: "Trajectory", aksi: "Pengembangan Aplikasi Otomasi Manajemen Sekolah", kegiatan: "Merancang dan mendevelop modul/fitur baru pada aplikasi manajemen TU/Guru", realisasi: "1 Modul/Fitur", selesai: true },
+        "dev_bug": { target: "Non-Trajectory", aksi: "Pemeliharaan Aplikasi Otomasi Sekolah", kegiatan: "Melakukan monitoring server, bug fixing, dan optimalisasi sistem aplikasi sekolah", realisasi: "1 Kegiatan", selesai: false },
+        "it_teknisi": { target: "Trajectory", aksi: "Dukungan Teknis Asesmen Nasional", kegiatan: "Melakukan setup, instalasi, dan sinkronisasi server/klien untuk pelaksanaan ujian", realisasi: "1 Kegiatan", selesai: true },
+        "it_sapras": { target: "Non-Trajectory", aksi: "Pemeliharaan Sarana Prasarana IT", kegiatan: "Mengecek dan melakukan maintenance hardware jaringan serta perangkat sapras", realisasi: "1 Kegiatan", selesai: false },
+        "pus_kasir": { target: "Non-Trajectory", aksi: "Pelayanan Administrasi Perpustakaan", kegiatan: "Stanby melayani sirkulasi peminjaman/pengembalian buku dan administrasi kasir", realisasi: "1 Kegiatan", selesai: false },
+        "pus_bersih": { target: "Non-Trajectory", aksi: "Pengelolaan Tata Ruang Perpustakaan", kegiatan: "Melakukan kebersihan ruang baca dan penataan rak buku", realisasi: "1 Kegiatan", selesai: false },
+        "pus_stok": { target: "Trajectory", aksi: "Inventarisasi Koleksi Perpustakaan", kegiatan: "Melakukan stok opname dan pencatatan buku perpustakaan", realisasi: "1 Dokumen Laporan", selesai: true },
+        "pus_literasi": { target: "Trajectory", aksi: "Pelaksanaan Program Literasi", kegiatan: "Menjalankan program literasi dan numerasi untuk menumbuhkan minat baca siswa", realisasi: "1 Kegiatan", selesai: true },
+        "rev_koordinasi": { target: "Non-Trajectory", aksi: "Pelaksanaan Program Revitalisasi Sekolah", kegiatan: "Berkoordinasi dalam tim untuk program pemeliharaan dan revitalisasi", realisasi: "1 Kegiatan", selesai: false }
+    };
+
+    function terapkanTemplate() {
+        const p = document.getElementById('templateTugas').value;
+        if(p && databaseTemplate[p]) {
+            document.getElementById('jenisTarget').value = databaseTemplate[p].target;
+            document.getElementById('rencanaAksi').value = databaseTemplate[p].aksi;
+            document.getElementById('kegiatan').value = databaseTemplate[p].kegiatan;
+            document.getElementById('realisasi').value = databaseTemplate[p].realisasi;
+            document.getElementById('isSelesai').checked = databaseTemplate[p].selesai;
+        }
+    }
+    
+    function hitungDurasi() {
+        const mulai = document.getElementById('jamMulai').value;
+        const selesai = document.getElementById('jamSelesai').value;
+        if(mulai && selesai) {
+            let start = new Date("01/01/2000 " + mulai);
+            let end = new Date("01/01/2000 " + selesai);
+            if(end < start) return "";
+            let diff = (end - start) / 60000; 
+            let jam = Math.floor(diff / 60);
+            let menit = diff % 60;
+            document.getElementById('durasiInfo').innerText = `Durasi: ${jam} Jam ${menit} Menit`;
+            return `${jam} Jam ${menit} Menit`;
+        }
+        return "";
+    }
 
     document.getElementById('kinerjaForm').addEventListener('submit', function(e) {
         e.preventDefault(); 
         const durasiFinal = hitungDurasi();
-        const token = localStorage.getItem("app_kinerja_token");
-        if(!token) return logout();
+        if(!durasiFinal) return alert("Periksa kembali jam mulai dan selesai Anda.");
         
+        const token = localStorage.getItem("app_kinerja_token");
+        if(!token) return logout(); // Keamanan lapis kedua di sisi klien
+
         document.getElementById('btnSubmit').disabled = true; 
         document.getElementById('loader').style.display = 'block';
+        document.getElementById('result-box').style.display = 'none';
 
         const fileInput = document.getElementById('fotoKegiatan');
-        let fotoBase64 = ""; let fotoMimeType = "";
+        let fotoBase64 = ""; 
+        let fotoMimeType = "";
 
         if(fileInput.files.length > 0) {
+            const file = fileInput.files[0];
+            fotoMimeType = file.type;
             const reader = new FileReader();
             reader.onload = function(ev) {
-                kirimDataSecure(ev.target.result.split(',')[1], fileInput.files[0].type, durasiFinal, token);
+                fotoBase64 = ev.target.result.split(',')[1];
+                kirimDataSecure(fotoBase64, fotoMimeType, durasiFinal, token);
             };
-            reader.readAsDataURL(fileInput.files[0]);
+            reader.readAsDataURL(file);
         } else {
             kirimDataSecure("", "", durasiFinal, token);
         }
@@ -203,27 +376,27 @@
 
     function kirimDataSecure(fotoBase64, fotoMimeType, durasiFinal, token) {
         const payload = {
-            action: "submit", 
-            token: token,     
+            action: "submit",
+            token: token,
             tanggal: document.getElementById('tanggal').value,
             jamMulai: document.getElementById('jamMulai').value,
             jamSelesai: document.getElementById('jamSelesai').value,
             durasi: durasiFinal,
             jenisTarget: document.getElementById('jenisTarget').value,
-            isSelesai: document.getElementById('isSelesai').checked,
+            isSelesai: document.getElementById('isSelesai').checked ? "Selesai" : "Proses",
             rencanaAksi: document.getElementById('rencanaAksi').value,
             kegiatan: document.getElementById('kegiatan').value,
             realisasi: document.getElementById('realisasi').value,
-            linkDokumen: document.getElementById('linkDokumen').value,
-            kodeDev: document.getElementById('kodeDev').value, // Menangkap data Snippet Kode
             fotoBase64: fotoBase64,
-            fotoMimeType: fotoMimeType
+            fotoMimeType: fotoMimeType,
+            linkDokumen: document.getElementById('linkDokumen').value
         };
 
         fetch(GAS_WEB_APP_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify(payload)
+            body: JSON.stringify(payload),
+            redirect: 'follow'
         })
         .then(res => res.json())
         .then(data => {
@@ -231,23 +404,25 @@
             document.getElementById('loader').style.display = 'none';
             if(data.status === "success") {
                 document.getElementById('result-box').style.display = 'block';
-                document.getElementById('docLink').href = data.dokumenUrl; 
-                document.getElementById('docLink').innerText = data.dokumenUrl;
+                
+                let link = document.getElementById('docLink');
+                link.href = data.dokumenUrl; 
+                link.innerText = data.dokumenUrl;
+                
                 document.getElementById('fotoKegiatan').value = "";
                 document.getElementById('linkDokumen').value = "";
-                document.getElementById('kodeDev').value = "";
+                
+                navigator.clipboard.writeText(data.dokumenUrl);
             } else {
                 alert("Gagal: " + data.pesan);
-                if(data.pesan.includes("Ditolak")) logout();
+                if(data.pesan.includes("Ditolak")) logout(); // Tendang user jika token expired/salah
             }
         }).catch(err => {
             document.getElementById('btnSubmit').disabled = false;
             document.getElementById('loader').style.display = 'none';
-            alert("Jaringan bermasalah.");
+            alert("Jaringan bermasalah: " + err);
         });
     }
 </script>
 </body>
 </html>
-
-    
