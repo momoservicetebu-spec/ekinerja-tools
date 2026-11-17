@@ -2,24 +2,56 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Meta viewport ini sangat penting agar tampilan pas di HP dan tidak zoom out -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Input eKinerja Harian ASN</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; color: #333; padding: 20px; }
-        .container { max-width: 650px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #2c3e50; margin-bottom: 20px; font-size: 22px; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 14px; }
-        input[type="text"], input[type="date"], input[type="time"], input[type="file"], input[type="url"], select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-family: inherit; }
+        /* BASE STYLE */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; color: #333; padding: 10px; margin: 0; }
+        .container { max-width: 650px; margin: 0 auto; background: #fff; padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); box-sizing: border-box; }
+        h2 { text-align: center; color: #2c3e50; margin-bottom: 20px; font-size: 20px; line-height: 1.4; }
+        
+        /* FORM ELEMENTS */
+        .form-group { margin-bottom: 16px; }
+        label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 14px; color: #34495e; }
+        
+        /* Input & Select: Dibuat lebih besar (16px) agar iPhone/Android tidak otomatis zoom saat mengetik, dan padding ditebalkan agar mudah disentuh */
+        input[type="text"], input[type="date"], input[type="time"], input[type="file"], input[type="url"], select { 
+            width: 100%; padding: 12px 15px; border: 1px solid #ced4da; border-radius: 6px; box-sizing: border-box; font-family: inherit; font-size: 16px; background-color: #fff; transition: border-color 0.3s; 
+        }
+        input:focus, select:focus { border-color: #3498db; outline: none; }
+        
+        /* LAYOUT BARIS */
         .row { display: flex; gap: 15px; } .col { flex: 1; }
-        .info-box { background: #e8f4f8; padding: 10px; border-left: 4px solid #3498db; border-radius: 4px; font-size: 13px; margin-top: 5px; }
-        .checkbox-group { display: flex; align-items: center; gap: 10px; background: #fff3e0; padding: 12px; border-radius: 4px; border: 1px solid #ffcc80; margin-bottom: 15px; }
-        .checkbox-group input { width: auto; transform: scale(1.3); }
-        button { width: 100%; background-color: #3498db; color: white; padding: 12px; border: none; border-radius: 4px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        button:hover { background-color: #2980b9; } .btn-secondary { background-color: #27ae60; margin-top: 15px; }
+        
+        /* INFO & CHECKBOX */
+        .info-box { background: #e8f4f8; padding: 12px; border-left: 4px solid #3498db; border-radius: 4px; font-size: 13px; margin-top: 5px; }
+        .checkbox-group { display: flex; align-items: flex-start; gap: 12px; background: #fff3e0; padding: 15px; border-radius: 6px; border: 1px solid #ffcc80; margin-bottom: 15px; cursor: pointer; }
+        .checkbox-group input[type="checkbox"] { width: 22px; height: 22px; margin: 0; flex-shrink: 0; cursor: pointer; }
+        .checkbox-group label { margin: 0; cursor: pointer; font-size: 14px; line-height: 1.4; }
+        
+        /* TOMBOL (Touch Target lebih luas) */
+        button { width: 100%; background-color: #3498db; color: white; padding: 15px; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: background-color 0.3s; }
+        button:hover { background-color: #2980b9; } 
+        .btn-secondary { background-color: #27ae60; margin-top: 15px; }
         .btn-secondary:hover { background-color: #2ecc71; }
-        #result-box { display: none; margin-top: 20px; padding: 15px; background: #e8f8f5; border-left: 5px solid #1abc9c; border-radius: 4px; }
-        .loader { display: none; text-align: center; margin-top: 10px; font-style: italic; color: #7f8c8d; }
+        
+        /* HASIL & LOADING */
+        #result-box { display: none; margin-top: 20px; padding: 15px; background: #e8f8f5; border-left: 5px solid #1abc9c; border-radius: 6px; font-size: 14px; word-break: break-word; }
+        .loader { display: none; text-align: center; margin-top: 15px; font-size: 14px; font-style: italic; color: #7f8c8d; }
+        
+        /* ========================================= */
+        /* RESPONSIVE KHUSUS SMARTPHONE (Layar Sempit) */
+        /* ========================================= */
+        @media screen and (max-width: 480px) {
+            body { padding: 5px; background-color: #fff; } /* Hapus abu-abu di pinggir saat di HP */
+            .container { padding: 15px; box-shadow: none; border-radius: 0; }
+            h2 { font-size: 18px; margin-bottom: 15px; }
+            .row { flex-direction: column; gap: 10px; } /* Susun Waktu Mulai & Selesai jadi atas-bawah */
+            .checkbox-group { padding: 12px; }
+            button { padding: 14px; font-size: 15px; }
+            input[type="text"], input[type="date"], input[type="time"], input[type="file"], input[type="url"], select { padding: 10px 12px; }
+        }
     </style>
 </head>
 <body>
@@ -54,8 +86,8 @@
             <div class="col"><label>Tanggal</label><input type="date" id="tanggal" required></div>
         </div>
         <div class="form-group row">
-            <div class="col"><label>Mulai</label><input type="time" id="jamMulai" onchange="hitungDurasi()" required></div>
-            <div class="col"><label>Selesai</label><input type="time" id="jamSelesai" onchange="hitungDurasi()" required></div>
+            <div class="col"><label>Jam Mulai</label><input type="time" id="jamMulai" onchange="hitungDurasi()" required></div>
+            <div class="col"><label>Jam Selesai</label><input type="time" id="jamSelesai" onchange="hitungDurasi()" required></div>
         </div>
         <div class="info-box" id="durasiInfo">Durasi: 0 Jam 0 Menit</div>
 
@@ -67,9 +99,12 @@
             </select>
         </div>
 
-        <div class="checkbox-group">
-            <input type="checkbox" id="isSelesai">
-            <label for="isSelesai" style="margin:0;"><strong>Checklist "Selesai pada Rencana Aksi"</strong><br><small style="font-weight:normal;">Centang jika kegiatan selesai secara kuantitas.</small></label>
+        <div class="checkbox-group" onclick="document.getElementById('isSelesai').click()">
+            <input type="checkbox" id="isSelesai" onclick="event.stopPropagation()">
+            <label for="isSelesai">
+                <strong>Checklist "Selesai pada Rencana Aksi"</strong><br>
+                <span style="font-weight:normal; font-size:12px; color:#555;">Centang jika kegiatan selesai secara kuantitas.</span>
+            </label>
         </div>
 
         <div class="form-group"><label>Rencana Aksi</label><input type="text" id="rencanaAksi" required></div>
@@ -77,16 +112,16 @@
         <div class="form-group"><label>Realisasi</label><input type="text" id="realisasi" required></div>
         
         <!-- KOLOM BUKTI DUKUNG TAMBAHAN (FOTO & LINK) -->
-        <div class="form-group" style="background:#f1f8ff; padding:15px; border:1px dashed #3498db; border-radius:6px;">
-            <label style="color:#2980b9; font-size:16px;">📂 Bukti Dukung (Opsional)</label>
+        <div class="form-group" style="background:#f8faff; padding:15px; border:1px dashed #3498db; border-radius:6px;">
+            <label style="color:#2980b9; font-size:15px;">📂 Bukti Dukung (Opsional)</label>
             
             <div style="margin-top: 10px;">
-                <label style="font-size:13px; color:#444;">1. Upload Foto/Screenshot (Khusus Gambar):</label>
-                <input type="file" id="fotoKegiatan" accept="image/*" style="background:#fff;">
+                <label style="font-size:13px; color:#444;">1. Upload Foto/Screenshot (Gambar):</label>
+                <input type="file" id="fotoKegiatan" accept="image/*" style="background:#fff; border:none; padding:8px 0;">
             </div>
             
             <div style="margin-top: 15px;">
-                <label style="font-size:13px; color:#444;">2. Link Dokumen (Untuk Word / Excel / Google Drive):</label>
+                <label style="font-size:13px; color:#444;">2. Link Dokumen (Word / Excel / Drive):</label>
                 <input type="url" id="linkDokumen" placeholder="Paste link tautan dokumen di sini..." style="background:#fff;">
             </div>
         </div>
@@ -96,18 +131,18 @@
     </form>
 
     <div id="result-box">
-        <strong>Berhasil!</strong><br>Tautan Bukti Dukung:<br>
+        <strong>✅ Berhasil!</strong><br>Tautan Bukti Dukung Anda:<br><br>
         <a id="docLink" href="#" style="color:#16a085; font-weight:bold; word-break:break-all;">Klik di sini untuk membuka</a>
     </div>
 
     <hr style="margin-top: 30px; border: 0; border-top: 1px solid #ddd;">
-    <button class="btn-secondary" onclick="window.open('https://docs.google.com/spreadsheets/d/1NeOUa73_FxG-WlpxISLJRrXuTNuY2ISigzTy-Ive8WA', '_blank')">
-        📊 Buka Dashboard Monitoring (Google Sheets)
+    <button type="button" class="btn-secondary" onclick="window.open('https://docs.google.com/spreadsheets/d/1NeOUa73_FxG-WlpxISLJRrXuTNuY2ISigzTy-Ive8WA', '_blank')">
+        📊 Buka Dashboard Monitoring (Sheets)
     </button>
 </div>
 
 <script>
-    // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT ANDA DI SINI
+    // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT ANDA DI SINI !!!
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxorz25RFm-lhYN3ialtv4Nu3ptPVI33PBsxeCYWe-0u5bWdwKFQ_1kg8EWsFxB2WeU/exec";
 
     document.getElementById('tanggal').valueAsDate = new Date();
@@ -145,7 +180,7 @@
             let start = new Date("01/01/2000 " + mulai);
             let end = new Date("01/01/2000 " + selesai);
             if(end < start) {
-                document.getElementById('durasiInfo').innerText = "⚠️ Jam selesai harus lebih besar dari jam mulai.";
+                document.getElementById('durasiInfo').innerText = "⚠️ Jam selesai tidak valid.";
                 document.getElementById('durasiInfo').style.borderLeftColor = "#e74c3c";
                 return "";
             }
@@ -162,7 +197,7 @@
     document.getElementById('kinerjaForm').addEventListener('submit', function(e) {
         e.preventDefault(); 
         const durasiFinal = hitungDurasi();
-        if(!durasiFinal) return alert("Periksa kembali input waktu Anda.");
+        if(!durasiFinal) return alert("Periksa kembali jam mulai dan selesai Anda.");
         
         const btnSubmit = document.getElementById('btnSubmit');
         const loader = document.getElementById('loader');
@@ -199,7 +234,7 @@
             rencanaAksi: document.getElementById('rencanaAksi').value,
             kegiatan: document.getElementById('kegiatan').value,
             realisasi: document.getElementById('realisasi').value,
-            linkDokumen: document.getElementById('linkDokumen').value, // Mengambil input link
+            linkDokumen: document.getElementById('linkDokumen').value,
             fotoBase64: fotoBase64,
             fotoMimeType: fotoMimeType
         };
@@ -220,18 +255,16 @@
                 link.href = data.dokumenUrl;
                 link.innerText = data.dokumenUrl;
                 
-                // Reset form setelah sukses
                 document.getElementById('fotoKegiatan').value = "";
                 document.getElementById('linkDokumen').value = "";
                 
-                // Copy to clipboard & open
-                navigator.clipboard.writeText(data.dokumenUrl).then(() => alert("✅ Tautan disalin! Silakan paste di eKinerja."));
+                navigator.clipboard.writeText(data.dokumenUrl).then(() => alert("✅ Link Bukti Dukung berhasil disalin ke HP Anda! Silakan paste di eKinerja."));
                 window.open(data.dokumenUrl, '_blank');
             } else alert("Gagal: " + data.pesan);
         }).catch(err => {
             document.getElementById('btnSubmit').disabled = false;
             document.getElementById('loader').style.display = 'none';
-            alert("Error: " + err);
+            alert("Terjadi kesalahan jaringan: " + err);
         });
     }
 </script>
