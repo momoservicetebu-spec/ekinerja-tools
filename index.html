@@ -100,8 +100,16 @@
     // MASUKKAN URL WEB APP GOOGLE APPS SCRIPT ANDA
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxorz25RFm-lhYN3ialtv4Nu3ptPVI33PBsxeCYWe-0u5bWdwKFQ_1kg8EWsFxB2WeU/exec";
 
+   // 1. SET TANGGAL OTOMATIS HARI INI
     document.getElementById('tanggal').valueAsDate = new Date();
 
+    // 2. SET JAM MULAI OTOMATIS SAAT INI
+    const now = new Date();
+    const jamSekarang = String(now.getHours()).padStart(2, '0');
+    const menitSekarang = String(now.getMinutes()).padStart(2, '0');
+    document.getElementById('jamMulai').value = `${jamSekarang}:${menitSekarang}`;
+
+    // Data Template
     const databaseTemplate = {
         "dev_fitur": { target: "Trajectory", aksi: "Pengembangan Aplikasi Otomasi Manajemen Sekolah", kegiatan: "Merancang dan mendevelop modul/fitur baru pada aplikasi manajemen TU/Guru", realisasi: "1 Modul/Fitur", selesai: true },
         "dev_bug": { target: "Non-Trajectory", aksi: "Pemeliharaan Aplikasi Otomasi Sekolah", kegiatan: "Melakukan monitoring server, bug fixing, dan optimalisasi sistem aplikasi sekolah", realisasi: "1 Kegiatan", selesai: false },
